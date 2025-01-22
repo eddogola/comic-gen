@@ -45,7 +45,7 @@ export async function POST(request: Request) {
     console.log('Panel descriptions:', panelDescriptions);
 
     // Generate images for each panel description
-    const imagePromises = panelDescriptions.map(async (description) => {
+    const imagePromises = panelDescriptions?.map(async (description) => {
       const output = await replicate.run(
         "black-forest-labs/flux-dev",
         {
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
         description,
         image: `data:image/png;base64,${base64}`
       };
-    });
+    }) ?? [];
 
     const panels = await Promise.all(imagePromises);
 
