@@ -2,6 +2,7 @@
 
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
+import Link from 'next/link';
 
 export default function History() {
   const { theme, setTheme } = useTheme();
@@ -40,7 +41,7 @@ export default function History() {
         )}
       </button>
 
-      <a
+      <Link
         href="/"
         className="fixed top-4 left-4 p-3 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
         aria-label="Back to home"
@@ -48,7 +49,7 @@ export default function History() {
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
-      </a>
+      </Link>
 
       <main className="max-w-4xl mx-auto py-8">
         <h1 className="text-4xl font-bold text-center mb-8">Prompt History</h1>
