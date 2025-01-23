@@ -18,6 +18,16 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [panels, setPanels] = useState<Panel[]>([]);
 
+  // Add new state for prompt history
+  const [promptHistory, setPromptHistory] = useState<string[]>(() => {
+    // Initialize from localStorage if available
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('promptHistory');
+      return saved ? JSON.parse(saved) : [];
+    }
+    return [];
+  });
+
   // Prevent hydration mismatch
   useEffect(() => {
     setMounted(true);
@@ -32,6 +42,11 @@ export default function Home() {
     
     setIsLoading(true);
     try {
+      // Add prompt to history before generating
+      const newHistory = [prompt, ...promptHistory].slice(0, 10); // Keep last 10 prompts
+      setPromptHistory(newHistory);
+      localStorage.setItem('promptHistory', JSON.stringify(newHistory));
+
       const response = await fetch('/api/generate', {
         method: 'POST',
         headers: {
@@ -61,6 +76,17 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 p-4 text-black dark:text-white">
+      {/* Add history link */}
+      <a
+        href="/history"
+        className="fixed top-4 left-4 p-3 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+        aria-label="View history"
+      >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </a>
+
       {/* Theme toggle button */}
       <button
         onClick={toggleTheme}
